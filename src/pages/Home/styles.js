@@ -6,8 +6,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color:rgb(26, 40, 139); 
-  color: white;
+  background-color:rgb(255, 255, 255); 
+  color: black;
 `;
 
 export const InfoContainer = styled.div`
@@ -22,11 +22,16 @@ export const InfoContainer = styled.div`
 
 export const Table = styled.table`
   border-collapse: collapse;
+  color: black;
   width: 80%;
 
   th, td {
     border: 1px solid #ddd;
     padding: 8px;
+  }
+  thead{
+    background-color:rgb(44, 37, 37);
+    color: white;
   }
 
   th {
@@ -47,4 +52,13 @@ export const Button = styled.button`
   &:hover {
     background-color: #45a049;
   }
+`;
+export const ErrorMensagem = styled.span`
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  width: 40%;
+  background-color: #f44336;
+  margin-top: 20px;
+  border-radius: 5px;
 `;
