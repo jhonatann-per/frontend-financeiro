@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, InfoContainer, Table, Button, ErrorMensagem } from "./styles";
 import { api } from "../../config/configApi";
+import { Link } from "react-router-dom";
 import moment from "moment";
 
 export const Home = () => {
@@ -86,6 +87,27 @@ export const Home = () => {
     listarExtrato(dataView.ano, dataView.mes);
   }, []);
 
+  const apagarRegistro = async (id) => {
+    try{
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+      const response = await api.delete(`/excluir-lancamento/${id}`, { headers });
+      console.log(response.data.mensagem);
+      setStatus({
+        type: 'success',
+        message: response.data.mensagem
+      });
+      setData(data.filter(item => item.id !== id));
+    } catch (err) {
+      setStatus({
+        type: 'error',
+        message: 'Erro: Tente mais tarde Api fora do ar!'
+      });
+    }
+  };
+
+  
   return (
     <Container>
       <InfoContainer>
@@ -93,6 +115,7 @@ export const Home = () => {
         <Button onClick={anterior}>Anterior</Button>
         <Button onClick={proximo}>Próximo</Button>
         <Button onClick={reload}>Atual</Button>
+        <Link to="/cadastrar"><Button>Cadastrar</Button></Link>
       </InfoContainer>
       <Table>
         <thead>
@@ -123,6 +146,10 @@ export const Home = () => {
               <td>{moment(item.dataPagamento).format('DD/MM/YYYY')}</td>
               <td>{new Intl.NumberFormat('pt-BR', {
                  style: 'currency', currency: 'BRL' }).format(item.valor)}</td>
+              <td>
+                <Button onClick={() => apagarRegistro(item.id)}>Apagar</Button>
+                <Button><Link to={"/editar/" + item.id}>Editar</Link></Button>
+              </td>
             </tr>
           ))}
         </tbody>

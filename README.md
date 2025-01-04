@@ -25,3 +25,10 @@ facilitando a comunicação com servidores e a manipulação de dados recebidos.
 PARA MANIPULAR O FORMATO DA DATA
 ### npm install moment
 
+INTALAÇÃO DO REACT NUMBER FORMAT:
+### npm install react-number-format
+<!-- vamos instalar o React number format para formatar números em campos de entrada, como valores monetários, porcentagens, números de telefone, etc.
+Ela oferece uma maneira fácil de aplicar máscaras e formatações específicas a campos de entrada, garantindo que os dados sejam inseridos e exibidos de forma consistente e correta. -->
+ 
+
+
