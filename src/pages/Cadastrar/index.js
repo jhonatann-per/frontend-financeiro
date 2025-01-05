@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, Form, Button, ErrorMensagem, 
+import React, { useState } from "react";
+import { Container, Form, Button, ErrorStatus, 
     SuccessMensagem, FormGroup, Label, Select, Input, ButtonVoltar } from "./styles"; 
 import { NumericFormat } from "react-number-format";
 import { api } from "../../config/configApi";
@@ -34,7 +34,7 @@ export const Cadastrar = () => {
   };
 
   const valorFormatado = (values) => {
-    const { formattedValue, value } = values;
+    const { value } = values;
     setLancamentoData({ ...lancamentoData, valor: value });
   };
 
@@ -44,20 +44,20 @@ export const Cadastrar = () => {
       'Content-Type': 'application/json'
     };
 
-    await api.post("/cadastrar-lancamento", lancamentoData, { headers })
-      .then((response) => {
-        console.log(response);
-        setStatus({
-          type: 'success',
-          message: response.data.mensagem
-        });
-        limparCampos();
-      }).catch((err) => {
-        setStatus({ 
-          type: "error", 
-          message: "Erro ao realizar cadastro. " + err 
-        });
+    try {
+      const response = await api.post("/cadastrar-lancamento", lancamentoData, { headers });
+      console.log(response);
+      setStatus({
+        type: 'success',
+        message: response.data.mensagem
       });
+      limparCampos();
+    } catch (err) {
+      setStatus({ 
+        type: "error", 
+        message: "Erro ao realizar cadastro. " + err.message 
+      });
+    }
 
     setTimeout(() => {
       setStatus({
@@ -126,7 +126,8 @@ export const Cadastrar = () => {
           />
         </FormGroup>
         <Button type="submit">Cadastrar</Button>
-        {status.type === "success" ? <SuccessMensagem>{status.message}</SuccessMensagem> : status.type === "error" ? <ErrorMensagem>{status.message}</ErrorMensagem> : ""}
+        {status.type === "success" && <SuccessMensagem>{status.message}</SuccessMensagem>}
+        {status.type === "error" && <ErrorStatus>{status.message}</ErrorStatus>}
       </Form>
     </Container>
   );

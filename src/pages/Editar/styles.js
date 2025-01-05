@@ -17,7 +17,19 @@ export const Form = styled.form`
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 50%;
+
+  @media screen and (max-width: 912px) {
+    width: 70%;
+  }
+
+  @media screen and (max-width: 430px) {
+    width: 80%;
+  }
+
+  @media screen and (max-width: 414px) {
+    width: 80%;
+  }
 `;
 
 export const FormGroup = styled.div`
@@ -51,12 +63,18 @@ export const Button = styled.button`
 `;
 
 export const ButtonVoltar = styled(Button)`
+  position: absolute;
   top: 10px;
   left: 10px;
-  background-color: #6c757d;
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
 
   &:hover {
-    background-color: #5a6268;
+    background-color: #45a049;
   }
 `;
 

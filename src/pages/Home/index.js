@@ -30,7 +30,6 @@ export const Home = () => {
     }
 
     setDataView({ ano, mes });
-    listarExtrato(ano, mes);
   };
 
   const proximo = async () => {
@@ -44,12 +43,12 @@ export const Home = () => {
     }
 
     setDataView({ ano, mes });
-    listarExtrato(ano, mes);
   };
 
   const reload = async () => {
     if (dataView.mes !== mesInicial || dataView.ano !== anoInicial) {
       setDataView({ ano: anoInicial, mes: mesInicial });
+      listarExtrato(anoInicial, mesInicial);
     }
   };
 
@@ -61,34 +60,32 @@ export const Home = () => {
 
     await api.get('/listar-lancamentos/' + mes + '/' + ano)
       .then((response) => {
-      setData(response.data.lancamento);
-      setSaldoFinal(response.data.saldoFinal);
-      setValorPago(response.data.valorPago);
-      setValorRecebido(response.data.valorRecebido);
-      console.log(response);
-    })
-    .catch((err) => {
-      if (err.response) {
-        setStatus({
-          type: 'error',
-          message: err.response.data.message
-        });
-      }else{
-        setStatus({
-          type: 'error',
-          message: 'Erro: Tente mais tarde Api fora do ar!'
-        });
-      }
-    });
-
+        setData(response.data.lancamento);
+        setSaldoFinal(response.data.saldoFinal);
+        setValorPago(response.data.valorPago);
+        setValorRecebido(response.data.valorRecebido);
+      })
+      .catch((err) => {
+        if (err.response) {
+          setStatus({
+            type: 'error',
+            message: err.response.data.message
+          });
+        } else {
+          setStatus({
+            type: 'error',
+            message: 'Erro: Tente mais tarde Api fora do ar!'
+          });
+        }
+      });
   };
 
   useEffect(() => {
     listarExtrato(dataView.ano, dataView.mes);
-  }, []);
+  }, [dataView]);
 
   const apagarRegistro = async (id) => {
-    try{
+    try {
       const headers = {
         'Content-Type': 'application/json'
       }
@@ -107,14 +104,13 @@ export const Home = () => {
     }
   };
 
-  
   return (
     <Container>
       <InfoContainer>
-        <h1>{dataView.ano} Mês: {dataView.mes}</h1>
+        <h1>Registro: Ano {dataView.ano} Mês: {dataView.mes}</h1>
         <Button onClick={anterior}>Anterior</Button>
         <Button onClick={proximo}>Próximo</Button>
-        <Button onClick={reload}>Atual</Button>
+        <Button onClick={reload}>Mês Atual</Button>
         <Link to="/cadastrar"><Button>Cadastrar</Button></Link>
       </InfoContainer>
       <Table>
@@ -126,6 +122,7 @@ export const Home = () => {
             <th>Situação</th>
             <th>Data de Pagamento</th>
             <th>Valor</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -147,8 +144,8 @@ export const Home = () => {
               <td>{new Intl.NumberFormat('pt-BR', {
                  style: 'currency', currency: 'BRL' }).format(item.valor)}</td>
               <td>
-                <Button onClick={() => apagarRegistro(item.id)}>Apagar</Button>
-                <Button><Link to={"/editar/" + item.id}>Editar</Link></Button>
+                <Button to={"#"} onClick={() => apagarRegistro(item.id)}>Apagar</Button>
+                <Link to={"/editar/" + item.id}><Button>Editar</Button></Link>
               </td>
             </tr>
           ))}

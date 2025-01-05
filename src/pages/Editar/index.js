@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react"; 
-import { Container, Form, Button, ErrorMensagem, 
-    SuccessMensagem, FormGroup, Label, Select, Input, ButtonVoltar } from "./styles";
-import { NumericFormat } from "react-number-format"; 
-import { api } from "../../config/configApi"; 
-import { Link, useParams } from "react-router-dom"; 
+import React, { useState, useEffect } from "react";
+import moment from "moment";
+import { Container, Form, Button, ErrorMensagem, SuccessMensagem, FormGroup, Label, Select, Input, ButtonVoltar } from "./styles";
+import { NumericFormat } from "react-number-format";
+import { api } from "../../config/configApi";
+import { Link, useParams } from "react-router-dom";
 
-export const Editar = () => { 
-
-    const { id } = useParams(); 
+export const Editar = () => {
+    const { id } = useParams();
     const [lancamentoData, setLancamentoData] = useState({
         nome: "",
         valor: "",
@@ -22,23 +21,22 @@ export const Editar = () => {
     });
 
     useEffect(() => {
-        getLancamento(); 
+        getLancamento();
     }, [id]);
 
     const getLancamento = async () => {
         try {
-            const response = await api.get(`/buscar-lancamentos/${id}`,);
+            const response = await api.get(`/buscar-lancamentos/${id}`);
             console.log('Dados recebidos do backend:', response.data.buscarExtrato);
             setLancamentoData({
-                nome: response.data.buscarExtrato.nome || "", 
+                nome: response.data.buscarExtrato.nome || "",
                 valor: response.data.buscarExtrato.valor || "",
                 tipo: response.data.buscarExtrato.tipo || "",
                 situacao: response.data.buscarExtrato.situacao || "",
-                dataPagamento: formatDate(response.data.buscarExtrato.dataPagamento) || "" 
-               
+                dataPagamento: formatDate(response.data.buscarExtrato.dataPagamento) || ""
             });
         } catch (err) {
-            console.log('Erro ao buscar lançamento:', err); 
+            console.log('Erro ao buscar lançamento:', err);
             setStatus({
                 type: 'error',
                 message: 'Erro ao buscar lançamento. Tente novamente mais tarde.'
@@ -47,17 +45,8 @@ export const Editar = () => {
     };
 
     const formatDate = (dateString) => {
-        if (!dateString) return ""; 
-        // Retorna string vazia se a data não estiver definida.
-        const date = new Date(dateString); 
-        // Converte a string de data em um objeto Date.
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); 
-        // Adiciona zero à esquerda se o mês tiver um dígito.
-        const day = String(date.getDate()).padStart(2, '0'); 
-        // Adiciona zero à esquerda se o dia tiver um dígito.
-        return `${year}-${month}-${day}`; 
-        // Retorna a data no formato yyyy-MM-dd.
+        if (!dateString) return "";
+        return moment(dateString).format("YYYY-MM-DD");
     };
 
     const valorInput = (e) => {
@@ -66,26 +55,26 @@ export const Editar = () => {
 
     const valorFormatado = (values) => {
         const { formattedValue, value } = values;
-        setLancamentoData({ ...lancamentoData, valor: value }); 
+        setLancamentoData({ ...lancamentoData, valor: value });
     };
 
     const editarLancamento = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         const headers = {
             'Content-Type': 'application/json'
         };
 
-        await api.put(`/editar-lancamento/${id}`, lancamentoData, { headers }) 
+        await api.put(`/editar-lancamento/${id}`, lancamentoData, { headers })
             .then((response) => {
-                console.log(response); 
+                console.log(response);
                 setStatus({
                     type: 'success',
                     message: response.data.mensagem
                 });
             }).catch((err) => {
-                setStatus({ 
-                    type: "error", 
-                    message: "Erro ao editar lançamento. " + err 
+                setStatus({
+                    type: "error",
+                    message: "Erro ao editar lançamento. " + err
                 });
             });
 
@@ -100,42 +89,35 @@ export const Editar = () => {
     return (
         <Container>
             <h1>Editar Lançamento</h1>
-            <Link to="/"><ButtonVoltar>Voltar</ButtonVoltar></Link> 
+            <Link to="/"><ButtonVoltar>Voltar</ButtonVoltar></Link>
             <Form onSubmit={editarLancamento}>
                 <FormGroup>
                     <Label>Nome:</Label>
                     <Input
                         type="text"
                         name="nome"
-                        value={lancamentoData.nome} 
+                        value={lancamentoData.nome}
                         onChange={valorInput}
                     />
                 </FormGroup>
                 <FormGroup>
                     <Label>Valor:</Label>
                     <NumericFormat
-                        thousandSeparator="." 
-                        // Define o separador de milhar.
-                        decimalSeparator="," 
-                        // Define o separador decimal.
-                        prefix="R$ " 
-                        // Adiciona o prefixo "R$".
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        prefix="R$ "
                         fixedDecimalScale={true}
-                        decimalScale={2} 
-                        // Define duas casas decimais.
+                        decimalScale={2}
                         name="valor"
-                        value={lancamentoData.valor} 
-                        // Campo controlado com valor do estado.
-                        onValueChange={valorFormatado} 
-                        // Atualiza o estado com o valor formatado.
-                        customInput={Input} 
-                        // Utiliza o componente Input estilizado.
+                        value={lancamentoData.valor}
+                        onValueChange={valorFormatado}
+                        customInput={Input}
                     />
                 </FormGroup>
                 <FormGroup>
                     <Label>Tipo:</Label>
-                    <Select name="tipo" 
-                        value={lancamentoData.tipo} 
+                    <Select name="tipo"
+                        value={lancamentoData.tipo}
                         onChange={valorInput}>
                         <option value="">Selecione:</option>
                         <option value="1">Pagamento</option>
@@ -144,8 +126,8 @@ export const Editar = () => {
                 </FormGroup>
                 <FormGroup>
                     <Label>Situação:</Label>
-                    <Select name="situacao" 
-                        value={lancamentoData.situacao} 
+                    <Select name="situacao"
+                        value={lancamentoData.situacao}
                         onChange={valorInput}>
                         <option value="">Selecione:</option>
                         <option value="1">Pago</option>

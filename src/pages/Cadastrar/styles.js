@@ -34,6 +34,18 @@ export const Form = styled.form`
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 50%;
+
+  @media screen and (max-width: 912px) {
+    width: 70%;
+  }
+
+  @media screen and (max-width: 430px) {
+    width: 80%;
+  }
+
+  @media screen and (max-width: 414px) {
+    width: 80%;
+  }
 `;
 
 export const FormGroup = styled.div`
@@ -65,17 +77,24 @@ export const Button = styled.button`
     background-color: #0056b3;
   }
 `;
-export const SuccessMensagem = styled.p`
-    color: green;
-    margin-top: 10px;
-`;
+
 export const ErrorMensagem = styled.p`
   color: red;
   margin-top: 10px;
 `;
 
+export const SuccessMensagem = styled.p`
+  color: green;
+  margin-top: 10px;
+`;
+
+
 export const Select = styled.select`
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
+`;
+
+export const ErrorStatus = styled.p`
+  color: red;
 `;
